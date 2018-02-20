@@ -1,0 +1,11 @@
+﻿  Main.cpp
+c:\users\tech\documents\github\jeffcabraknet\jeff-emptyraknet\raknetempty\raknetempty\main.cpp(112): warning C4477: 'printf' : format string '%I64u' requires an argument of type 'unsigned __int64', but variadic argument 1 has type 'RakNet::RakNetGUID'
+Main.obj : error LNK2019: unresolved external symbol "public: __cdecl RakNet::SocketDescriptor::SocketDescriptor(void)" (??0SocketDescriptor@RakNet@@QEAA@XZ) referenced in function main
+Main.obj : error LNK2019: unresolved external symbol "public: __cdecl RakNet::SocketDescriptor::SocketDescriptor(unsigned short,char const *)" (??0SocketDescriptor@RakNet@@QEAA@GPEBD@Z) referenced in function main
+Main.obj : error LNK2019: unresolved external symbol "public: __cdecl RakNet::SystemAddress::SystemAddress(void)" (??0SystemAddress@RakNet@@QEAA@XZ) referenced in function "void __cdecl RakNet::`dynamic initializer for 'UNASSIGNED_SYSTEM_ADDRESS''(void)" (??__EUNASSIGNED_SYSTEM_ADDRESS@RakNet@@YAXXZ)
+Main.obj : error LNK2019: unresolved external symbol "public: char const * __cdecl RakNet::SystemAddress::ToString(bool,char)const " (?ToString@SystemAddress@RakNet@@QEBAPEBD_ND@Z) referenced in function "void __cdecl PacketHandler(void)" (?PacketHandler@@YAXXZ)
+Main.obj : error LNK2019: unresolved external symbol "public: char const * __cdecl RakNet::RakNetGUID::ToString(void)const " (?ToString@RakNetGUID@RakNet@@QEBAPEBDXZ) referenced in function "void __cdecl PacketHandler(void)" (?PacketHandler@@YAXXZ)
+Main.obj : error LNK2019: unresolved external symbol "public: static bool __cdecl RakNet::IRNS2_Berkley::IsPortInUse(unsigned short,char const *,unsigned short,int)" (?IsPortInUse@IRNS2_Berkley@RakNet@@SA_NGPEBDGH@Z) referenced in function main
+Main.obj : error LNK2019: unresolved external symbol "public: static class RakNet::RakPeerInterface * __cdecl RakNet::RakPeerInterface::GetInstance(void)" (?GetInstance@RakPeerInterface@RakNet@@SAPEAV12@XZ) referenced in function main
+C:\Users\Tech\Documents\GitHub\RakNet-master\RakNet-master\Lib\RakNet_VS2008_LibStatic_Debug_Win32.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\Users\Tech\Documents\GitHub\JeffCabRakNet\Jeff-emptyRakNet\RakNetEmpty\x64\Debug\RakNetEmpty.exe : fatal error LNK1120: 7 unresolved externals
