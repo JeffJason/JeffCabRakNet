@@ -4,6 +4,7 @@
 #include <iostream>
 #include <thread>         // std::thread
 #include <chrono>
+#include<map>
 
 static int SERVER_PORT = 65000;
 static int CLIENT_PORT = 65001;
@@ -14,6 +15,21 @@ RakNet::RakPeerInterface *g_rakPeerInterface = nullptr;
 bool isServer = false;
 bool isRunning = true;
 unsigned short g_totalPlayers = 0;
+
+enum{
+	ID_THEGAME_LOBBY = ID_USER_PACKET_ENUM,
+	ID_THEGAME_ACTION,
+};
+struct SPlayer
+{
+	std::string name;
+	RakNet::SystemAddress address;
+	//add HP and stuff
+};
+
+RakNet::SystemAddress g_serverAddress;
+
+std::map<unsigned long, SPlayer> m_playerMap;
 
 enum NetworkStates
 {
@@ -72,7 +88,21 @@ void InputHandler()
 				std::cout << "Client creating socket..." << std::endl;
 			}
 		}
-
+		else if (g_networkState == NS_Lobby)
+		{
+			std::cout << "if you would like to play this game, enter your name: " << std::endl;
+			std::cout << "If you want to quit, type quit: " << std::endl;
+			std::cin >> userInput;
+			if (strcmp(userInput, "Quit") == 0)
+			{
+				//heartbreaking
+				assert(0);
+			}
+			else
+			{
+				//send our first packet
+			}
+		}
 		std::this_thread::sleep_for(std::chrono::microseconds(100));
 	}
 }
