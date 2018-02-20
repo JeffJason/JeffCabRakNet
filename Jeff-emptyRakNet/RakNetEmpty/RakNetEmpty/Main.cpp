@@ -1,6 +1,7 @@
 #include "MessageIdentifiers.h"
 #include "RakPeerInterface.h"
 
+#include<BitStream.h>
 #include <iostream>
 #include <thread>         // std::thread
 #include <chrono>
@@ -101,6 +102,12 @@ void InputHandler()
 			else
 			{
 				//send our first packet
+				RakNet::BitStream myBitstream;
+				//first thing to write, is packet message identifier
+				myBitstream.Write((RakNet::MessageID)ID_THEGAME_LOBBY);
+				RakNet::RakString name(userInput);
+				myBitstream.Write(name);
+
 			}
 		}
 		std::this_thread::sleep_for(std::chrono::microseconds(100));
