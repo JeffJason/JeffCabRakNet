@@ -42,6 +42,8 @@ enum NetworkStates
 	NS_Connected,
 	NS_Running,
 	NS_Lobby,
+	NS_CharSelect,
+	NS_Game,
 };
 
 NetworkStates g_networkState = NS_Decision;
@@ -67,6 +69,23 @@ void OnConnectionAccepted(RakNet::Packet* packet)
 	//we have successfully connected, go to lobby
 	g_networkState = NS_Lobby;
 	g_serverAddress = packet->systemAddress;
+}
+
+void sendPacketsToClients(RakNet::MessageID id)
+{
+	//send packet back
+	std::string nullIn = "null";
+	RakNet::BitStream myBitStream;
+	//first thing to write, is packet message identifier
+	myBitStream.Write(id);
+	RakNet::RakString name(nullIn.c_str());
+	myBitStream.Write(name);
+
+	for (auto const& x : m_playerMap)
+	{
+		g_rakPeerInterface->Send(&myBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, x.second.address, false);
+	}
+
 }
 
 void InputHandler()
@@ -112,7 +131,39 @@ void InputHandler()
 				myBitStream.Write(name);
 				//virtual uint32_t Send(const RakNet::BitStream * bitStream, PacketPriority priority, PacketReliability reliability, char orderingChannel, const AddressOrGUID systemIdentifier, bool broadcast, uint32_t forceReceiptNumber = 0) = 0;
 				g_rakPeerInterface->Send(&myBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, g_serverAddress, false);
+				g_networkState = NS_CharSelect;
 			}
+		}
+
+		else if (g_networkState == NS_CharSelect)
+		{
+			std::cout << "To Choose a Class, type in the Class name" << std::endl;
+			std::cout << "CLASSES: Warrior, Archer, Mage" << std::endl;
+			std::cin >> userInput;
+
+			if (userInput[0] == 'W' || userInput[0] == 'w')
+			{
+				std::cout << "You Chose WARRIOR" << std::endl;
+				g_networkState = NS_Game;
+			}
+
+			else if (userInput[0] == 'A' || userInput[0] == 'a')
+			{
+				std::cout << "You Chose ARCHER" << std::endl;
+				g_networkState = NS_Game;
+			}
+
+			else if (userInput[0] == 'M' || userInput[0] == 'm')
+			{
+				std::cout << "You Chose MAGE" << std::endl;
+				g_networkState = NS_Game;
+			}
+		}
+
+		else if (g_networkState == NS_Game)
+		{
+			std::cout << "Time to Play the Game" << std::endl;
+
 		}
 
 		std::this_thread::sleep_for(std::chrono::microseconds(100));
