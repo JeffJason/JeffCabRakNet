@@ -1,3 +1,1 @@
-﻿  Main.cpp
-c:\users\jeff_\documents\github\jeffcabraknet\jeff-emptyraknet\raknetempty\raknetempty\main.cpp(199): warning C4477: 'printf' : format string '%I64u' requires an argument of type 'unsigned __int64', but variadic argument 1 has type 'RakNet::RakNetGUID'
-  RakNetEmpty.vcxproj -> C:\Users\jeff_\Documents\GitHub\JeffCabRakNet\Jeff-emptyRakNet\RakNetEmpty\Debug\RakNetEmpty.exe
+﻿  RakNetEmpty.vcxproj -> C:\Users\jeff_\Documents\GitHub\JeffCabRakNet\Jeff-emptyRakNet\RakNetEmpty\Debug\RakNetEmpty.exe
