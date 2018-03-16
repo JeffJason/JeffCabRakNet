@@ -1,3 +1,7 @@
+//Multiplayer System Assignment 1
+//Jeff Jason Cabudoy
+//100835165
+
 #include "MessageIdentifiers.h"
 #include "RakPeerInterface.h"
 #include "BitStream.h"
@@ -95,9 +99,9 @@ public:
 	}
 };
 
-m_class warrior = m_class(100, 30, "Warrior");
-m_class archer = m_class(50, 50, "Archer");
-m_class mage = m_class(30, 100, "Mage");
+m_class warrior = m_class(100, 50, "Warrior");
+m_class archer = m_class(100, 50, "Archer");
+m_class mage = m_class(100, 50, "Mage");
 
 struct SPlayer
 {
@@ -252,9 +256,9 @@ void InputHandler()
 			if (pickClass == false) {
 				std::cout << "Choose your class!" << std::endl;
 				std::cout << "To choose enter the name of one of the following classes:" << std::endl;
-				std::cout << "Warrior; Strength 30, Health 100" << std::endl;
-				std::cout << "Archer; Strength 50, Health 50" << std::endl;
-				std::cout << "Mage; Strength 100, Health 30" << std::endl;
+				std::cout << "Warrior; Strength 50, Health 100" << std::endl;
+				std::cout << "Archer; Strength 50, Health 100" << std::endl;
+				std::cout << "Mage; Strength 50, Health 100" << std::endl;
 				std::cin >> userInput;
 
 				if (strcmp(userInput, "Warrior") == 0 || strcmp(userInput, "Archer") == 0 || strcmp(userInput, "Mage") == 0)
@@ -277,7 +281,8 @@ void InputHandler()
 		{
 			if (isDead == false) {
 				if (myTurn == true) {
-					std::cout << "\nIt is your turn." << std::endl;
+					std::cout << "<<<<<<<<<< GAME START >>>>>>>>>>" << std::endl;
+					std::cout << "It is your turn.\n" << std::endl;
 					std::cout << "You can attack, or heal." << std::endl;
 					//Getting attack targets
 					//send our first packet
@@ -343,11 +348,11 @@ void InputHandler()
 		{
 			if (isDead == true)
 			{
-				std::cout << "You Lose!" << std::endl;
+				std::cout << "You Lose The Game!" << std::endl;
 			}
 			else if (isDead == false)
 			{
-				std::cout << "You Win!" << std::endl;
+				std::cout << "You Win The Game!" << std::endl;
 			}
 		}
 
@@ -468,15 +473,15 @@ bool HandleLowLevelPacket(RakNet::Packet* packet)
 
 	case ID_GAMEOVER:
 	{
-		std::cout << "\nGame Over" << std::endl;
+		std::cout << "<<<<<<<<<< Game Over >>>>>>>>>>\n" << std::endl;
 
 		if (isDead == true)
 		{
-			std::cout << "You Lose!" << std::endl;
+			std::cout << "You Lose The Game!" << std::endl;
 		}
 		else if (isDead == false)
 		{
-			std::cout << "You Win!" << std::endl;
+			std::cout << "You Win The Game!" << std::endl;
 		}
 
 		g_networkState = NS_GameOver;
@@ -836,7 +841,7 @@ void PacketHandler()
 						g_rakPeerInterface->Send(&myBitStreamOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_playerMap.find(inputGuid)->second.address, false);
 
 						//informing other client's of player's action
-						std::string input2 = "      " + m_playerMap.find(inputGuid)->second.name + " delt " + std::to_string(attackDamage) + " damage to " + m_playerMap.find(guidTemp)->second.name +
+						std::string input2 = "      " + m_playerMap.find(inputGuid)->second.name + " dealt " + std::to_string(attackDamage) + " damage to " + m_playerMap.find(guidTemp)->second.name +
 							".\n  " + m_playerMap.find(guidTemp)->second.name + " now has: " + std::to_string(m_playerMap.find(guidTemp)->second.playerClass.health) + " health.";
 
 						RakNet::BitStream myBitStreamOutSecond;
