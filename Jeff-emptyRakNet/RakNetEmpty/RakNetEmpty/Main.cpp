@@ -46,7 +46,7 @@ enum {
 	ID_REQUEST_STATS,
 	ID_GET_TARGETS,
 	ID_NEXT_TURN,
-	ID_HEAL_SELF,
+	ID_HEAL,
 	ID_ATTACK,
 	ID_PRINT_THIS,
 	ID_TURN_TRUE,
@@ -95,7 +95,7 @@ public:
 
 	void printClass() {
 		std::cout << "Chosen class: " << std::endl;
-		std::cout << className << "; Strength " << strength << ", Health " << health << std::endl;
+		std::cout << className << "; STRENGTH: " << strength << ", HP: " << health << std::endl;
 	}
 };
 
@@ -283,7 +283,7 @@ void InputHandler()
 				if (myTurn == true) {
 					std::cout << "<<<<<<<<<< GAME START >>>>>>>>>>" << std::endl;
 					std::cout << "It is your turn.\n" << std::endl;
-					std::cout << "You can attack, or heal." << std::endl;
+					std::cout << "You can ATTACK or HEAL the opponent." << std::endl;
 					//Getting attack targets
 					//send our first packet
 					RakNet::BitStream myBitStream;
@@ -294,8 +294,8 @@ void InputHandler()
 					g_rakPeerInterface->Send(&myBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, g_serverAddress, false);
 
 
-					std::cout << "Enter in a player's name to attack them." << std::endl;
-					std::cout << "Enter in 'heal' to heal yourself." << std::endl;
+					std::cout << "Enter in a player's name to attack." << std::endl;
+					std::cout << "Enter in 'heal' to heal." << std::endl;
 					std::cout << "Enter 'stats' to get your class stats!\n" << std::endl;
 					std::cin >> userInput;
 
@@ -312,7 +312,7 @@ void InputHandler()
 					else if (strcmp(userInput, "heal") == 0)
 					{
 						RakNet::BitStream myBitStream;
-						myBitStream.Write((RakNet::MessageID)ID_HEAL_SELF);
+						myBitStream.Write((RakNet::MessageID)ID_HEAL);
 						RakNet::RakString name(userInput);
 						myBitStream.Write(name);
 						g_rakPeerInterface->Send(&myBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, g_serverAddress, false);
@@ -610,7 +610,7 @@ void PacketHandler()
 						g_rakPeerInterface->Send(&myBitStreamOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 
 						//Telling who's turn it is
-						std::string input2 = "\nIt is " + m_playerMap.find(guidTemp)->second.name + "'s turn!\n";
+						std::string input2 = "It is \n" + m_playerMap.find(guidTemp)->second.name + "'s turn!\n";
 
 						RakNet::BitStream myBitStreamOutSecond;
 						myBitStreamOutSecond.Write((RakNet::MessageID)ID_PRINT_THIS);
@@ -751,7 +751,7 @@ void PacketHandler()
 						g_rakPeerInterface->Send(&myBitStreamSetTurn, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_playerMap.find(guidTemp)->second.address, false);
 
 						//Telling who's turn it is
-						std::string input2 = "\nIt is " + m_playerMap.find(guidTemp)->second.name + "'s turn!\n";
+						std::string input2 = "It is \n" + m_playerMap.find(guidTemp)->second.name + "'s turn!\n";
 
 						RakNet::BitStream myBitStreamOutSecond;
 						myBitStreamOutSecond.Write((RakNet::MessageID)ID_PRINT_THIS);
@@ -763,7 +763,7 @@ void PacketHandler()
 					break;
 				}
 
-				case ID_HEAL_SELF:
+				case ID_HEAL:
 				{
 					RakNet::BitStream myBitStream(packet->data, packet->length, false); // The false is for efficiency so we don't make a copy of the passed data
 					RakNet::MessageID messageID;
@@ -776,7 +776,7 @@ void PacketHandler()
 
 					//sending heal amount to player who healed
 					int healAmount = m_playerMap.find(guid)->second.playerClass.Healing();
-					std::string input = "\n You healed for: " + std::to_string(healAmount) + ".\n You now have: " + std::to_string(m_playerMap.find(guid)->second.playerClass.health) + " health.";
+					std::string input = "You healed for: \n" + std::to_string(healAmount) + "You now have: \n" + std::to_string(m_playerMap.find(guid)->second.playerClass.health) + " HP.";
 
 					RakNet::BitStream myBitStreamOut;
 					myBitStreamOut.Write((RakNet::MessageID)ID_PRINT_THIS);
@@ -786,7 +786,7 @@ void PacketHandler()
 					g_rakPeerInterface->Send(&myBitStreamOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_playerMap.find(guid)->second.address, false);
 
 					//informing other client's of player's action
-					std::string input2 = "    " + m_playerMap.find(guid)->second.name + " healed for: " + std::to_string(healAmount) + ".\n They now have: " + std::to_string(m_playerMap.find(guid)->second.playerClass.health) + " health.";
+					std::string input2 = "    " + m_playerMap.find(guid)->second.name + " healed for: " + std::to_string(healAmount) + "They now have: \n" + std::to_string(m_playerMap.find(guid)->second.playerClass.health) + " HP.";
 
 					RakNet::BitStream myBitStreamOutSecond;
 					myBitStreamOutSecond.Write((RakNet::MessageID)ID_PRINT_THIS);
@@ -830,8 +830,8 @@ void PacketHandler()
 						m_playerMap.find(guidTemp)->second.playerClass.Damaging(attackDamage);
 
 						//sending heal amount to player who healed
-						std::string input = "\n You dealt " + std::to_string(attackDamage) + " damage to " + m_playerMap.find(guidTemp)->second.name +
-							".\n They now have: " + std::to_string(m_playerMap.find(guidTemp)->second.playerClass.health) + " health.";
+						std::string input = "You dealt " + std::to_string(attackDamage) + " damage to \n" + m_playerMap.find(guidTemp)->second.name +
+							"They now have: " + std::to_string(m_playerMap.find(guidTemp)->second.playerClass.health) + " health.";
 
 						RakNet::BitStream myBitStreamOut;
 						myBitStreamOut.Write((RakNet::MessageID)ID_PRINT_THIS);
@@ -841,8 +841,8 @@ void PacketHandler()
 						g_rakPeerInterface->Send(&myBitStreamOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_playerMap.find(inputGuid)->second.address, false);
 
 						//informing other client's of player's action
-						std::string input2 = "      " + m_playerMap.find(inputGuid)->second.name + " dealt " + std::to_string(attackDamage) + " damage to " + m_playerMap.find(guidTemp)->second.name +
-							".\n  " + m_playerMap.find(guidTemp)->second.name + " now has: " + std::to_string(m_playerMap.find(guidTemp)->second.playerClass.health) + " health.";
+						std::string input2 = "      " + m_playerMap.find(inputGuid)->second.name + " dealt " + std::to_string(attackDamage) + " damage to \n" + m_playerMap.find(guidTemp)->second.name +
+							" " + m_playerMap.find(guidTemp)->second.name + " now has: " + std::to_string(m_playerMap.find(guidTemp)->second.playerClass.health) + " health.";
 
 						RakNet::BitStream myBitStreamOutSecond;
 						myBitStreamOutSecond.Write((RakNet::MessageID)ID_PRINT_THIS);
